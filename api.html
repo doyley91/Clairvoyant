@@ -1,0 +1,701 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Clairvoyant API &mdash; Clairvoyant 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Clairvoyant 0.2.0 documentation" href="index.html"/>
+        <link rel="prev" title="Welcome to Clairvoyant’s documentation!" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Clairvoyant
+          
+
+          
+            
+            <img src="_static/logo.svg" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Clairvoyant API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Clairvoyant</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Clairvoyant API</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-clairvoyant">
+<span id="clairvoyant-api"></span><h1>Clairvoyant API<a class="headerlink" href="#module-clairvoyant" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="clairvoyant.Backtest">
+<em class="property">class </em><code class="descclassname">clairvoyant.</code><code class="descname">Backtest</code><span class="sig-paren">(</span><em>variables</em>, <em>trainStart</em>, <em>trainEnd</em>, <em>testStart</em>, <em>testEnd</em>, <em>buyThreshold=0.65</em>, <em>sellThreshold=0.65</em>, <em>C=1</em>, <em>gamma=10</em>, <em>continuedTraining=False</em>, <em>tz=&lt;UTC&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backtest is a type of machine learning classifier.</p>
+<p>The purpose of <code class="docutils literal"><span class="pre">Backtest</span></code> is to collect statistics on the performance of
+learned classifications while providing a quick and easy way to vary
+parameters for rapid experimentation. Backtest also provides some
+convenience functions for visualizing collected statistics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>variables</strong> &#8211; A list of columns that represent learning features.</li>
+<li><strong>trainStart</strong> &#8211; A datetime as a string that should be consistent with
+the <code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the start date for model
+training.</li>
+<li><strong>trainEnd</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the end date for model training.</li>
+<li><strong>testStart</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the start date for model
+testing.</li>
+<li><strong>testEnd</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the end date for model testing.</li>
+<li><strong>buyThreshold</strong> &#8211; Defines the confidence level at which Clair will
+will recommend a buy. Default 0.65.</li>
+<li><strong>sellThreshold</strong> &#8211; Defines the confidence level at which Clair will
+recommend a sell. Default 0.65.</li>
+<li><strong>C</strong> &#8211; A penalty parameter for false positives. See scikit-learn
+documentation for more details. Default 1.</li>
+<li><strong>gamma</strong> &#8211; The kernel coefficient for machine learning. See scikit-learn
+documentation for more details. Default 10.</li>
+<li><strong>continuedTraining</strong> &#8211; Determine if data from the testing period should
+be used to continue training the model during the
+testing phase. Default False.</li>
+<li><strong>tz</strong> &#8211; The timezone associated with the datetime parameters. Default
+UTC.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><p class="first last"><strong>debug</strong> &#8211; A boolean value that determines if debug strings will be
+printed as backtesting is run. Warning: may result in a lot of
+output.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="clairvoyant.Backtest.buyLogic">
+<code class="descname">buyLogic</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.buyLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.buyLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the buy count.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.buyStats">
+<code class="descname">buyStats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.buyStats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.buyStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the collected buy statistics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.clearStats">
+<code class="descname">clearStats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.clearStats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.clearStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset all collected statistics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.displayConditions">
+<code class="descname">displayConditions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.displayConditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.displayConditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the learning and testing parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.displayStats">
+<code class="descname">displayStats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.displayStats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.displayStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the collected backtesting statistics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.nextPeriodLogic">
+<code class="descname">nextPeriodLogic</code><span class="sig-paren">(</span><em>prediction</em>, <em>performance</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.nextPeriodLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.nextPeriodLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect statistics on correct and incorrect buys and sells.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prediction</strong> &#8211; A 1 or -1 representing an up or down performance.</li>
+<li><strong>performance</strong> &#8211; A positive or negative value representing the
+actual observed performance.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.runModel">
+<code class="descname">runModel</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.runModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.runModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run backtesting.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> &#8211; A <code class="docutils literal"><span class="pre">History</span></code> of stock data that includes observations in
+both the training and test phases.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.sellLogic">
+<code class="descname">sellLogic</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.sellLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.sellLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the sell count.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.sellStats">
+<code class="descname">sellStats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.sellStats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.sellStats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the collected sell statistics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Backtest.visualizeModel">
+<code class="descname">visualizeModel</code><span class="sig-paren">(</span><em>width=5</em>, <em>height=5</em>, <em>stepsize=0.02</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/backtest.html#Backtest.visualizeModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Backtest.visualizeModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output a visualization of the backtesting results.</p>
+<p>The diagram overlays training and testing observations on top of
+a color coded representation of learned recommendations. The color
+intensity represents the distribution of probability.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clairvoyant.Clair">
+<em class="property">class </em><code class="descclassname">clairvoyant.</code><code class="descname">Clair</code><span class="sig-paren">(</span><em>variables</em>, <em>trainStart</em>, <em>trainEnd</em>, <em>testStart</em>, <em>testEnd</em>, <em>buyThreshold=0.65</em>, <em>sellThreshold=0.65</em>, <em>C=1</em>, <em>gamma=10</em>, <em>continuedTraining=False</em>, <em>tz=&lt;UTC&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/clair.html#Clair"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Clair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cla.I.R. - Classifier Inferred Recommendations.</p>
+<p>Clair uses the support vector machine supplied by the sk-learn library to
+to infer buy and sell classifications for stocks using a client-supplied
+feature specification. Clair uses the default Radial Basis Function kernel
+provided by SVC. For more details, see the <a class="reference external" href="http://scikit-learn.org/stable/modules/svm.html#parameters-of-the-rbf-kernel">scikit learn documentation.</a></p>
+<p>Clients need to provide a date range for the training phase and another
+range for the testing phase. The learning phase determines classification
+probabilities that are used in the testing phase.</p>
+<p>Once the model is reliably trained, clients may use the <a class="reference internal" href="#clairvoyant.Clair.predict" title="clairvoyant.Clair.predict"><code class="xref py py-func docutils literal"><span class="pre">predict()</span></code></a>
+function to predict a result given an observed support vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>variables</strong> &#8211; A list of columns that represent learning features.</li>
+<li><strong>trainStart</strong> &#8211; A datetime as a string that should be consistent with
+the <code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the start date for model
+training.</li>
+<li><strong>trainEnd</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the end date for model training.</li>
+<li><strong>testStart</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the start date for model
+testing.</li>
+<li><strong>testEnd</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the end date for model testing.</li>
+<li><strong>buyThreshold</strong> &#8211; Defines the confidence level at which Clair will
+will recommend a buy. Default 0.65.</li>
+<li><strong>sellThreshold</strong> &#8211; Defines the confidence level at which Clair will
+recommend a sell. Default 0.65.</li>
+<li><strong>C</strong> &#8211; A penalty parameter for false positives. See scikit-learn
+documentation for more details. Default 1.</li>
+<li><strong>gamma</strong> &#8211; The kernel coefficient for machine learning. See scikit-learn
+documentation for more details. Default 10.</li>
+<li><strong>continuedTraining</strong> &#8211; Determine if data from the testing period should
+be used to continue training the model during the
+testing phase. Default False.</li>
+<li><strong>tz</strong> &#8211; The timezone associated with the datetime parameters. Default
+UTC.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="clairvoyant.Clair.buyLogic">
+<code class="descname">buyLogic</code><span class="sig-paren">(</span><em>prob</em>, <em>row</em>, <em>attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/clair.html#Clair.buyLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Clair.buyLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this function to provide your own logic.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Clair.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><em>data</em>, <em>model</em>, <em>X=[]</em>, <em>y=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/clair.html#Clair.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Clair.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the strategy logic using a trained model and input data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; A <code class="docutils literal"><span class="pre">History</span></code> object containing testing data.</li>
+<li><strong>model</strong> &#8211; A trained model.</li>
+<li><strong>X</strong> &#8211; Optional preprocessed support vectors used for continued
+training.</li>
+<li><strong>y</strong> &#8211; Optional preprocessed target values corresponding to any
+supplied support vectors.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Clair.learn">
+<code class="descname">learn</code><span class="sig-paren">(</span><em>data</em>, <em>X=[]</em>, <em>y=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/clair.html#Clair.learn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Clair.learn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the learning phase.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; A <code class="docutils literal"><span class="pre">History</span></code> object containing stock data along with
+training features.</li>
+<li><strong>X</strong> &#8211; Optional preprocessed support vectors.</li>
+<li><strong>y</strong> &#8211; Optional preprocessed target values. Should coincide with the
+<code class="docutils literal"><span class="pre">X</span></code> parameter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Clair.nextPeriodLogic">
+<code class="descname">nextPeriodLogic</code><span class="sig-paren">(</span><em>prediction</em>, <em>performance</em>, <em>row</em>, <em>attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/clair.html#Clair.nextPeriodLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Clair.nextPeriodLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this function to provide your own logic.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Clair.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>model</em>, <em>Xs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/clair.html#Clair.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Clair.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the probability of a buy or sell classification.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model</strong> &#8211; A trained model.</li>
+<li><strong>Xs</strong> &#8211; A list containing support vector data for a single vector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Clair.sellLogic">
+<code class="descname">sellLogic</code><span class="sig-paren">(</span><em>prob</em>, <em>row</em>, <em>attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/clair.html#Clair.sellLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Clair.sellLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this function to provide your own logic.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clairvoyant.Portfolio">
+<em class="property">class </em><code class="descclassname">clairvoyant.</code><code class="descname">Portfolio</code><span class="sig-paren">(</span><em>variables</em>, <em>trainStart</em>, <em>trainEnd</em>, <em>testStart</em>, <em>testEnd</em>, <em>buyThreshold=0.65</em>, <em>sellThreshold=0.65</em>, <em>C=1</em>, <em>gamma=10</em>, <em>continuedTraining=False</em>, <em>tz=&lt;UTC&gt;</em>, <em>transaction_cost=9.99</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a basic portfolio framework for backtesting.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>variables</strong> &#8211; A list of columns that represent learning features.</li>
+<li><strong>trainStart</strong> &#8211; A datetime as a string that should be consistent with
+the <code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the start date for model
+training.</li>
+<li><strong>trainEnd</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the end date for model training.</li>
+<li><strong>testStart</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the start date for model
+testing.</li>
+<li><strong>testEnd</strong> &#8211; A datetime as a string that should be consistent with the
+<code class="docutils literal"><span class="pre">tz</span></code> parameter. Defines the end date for model testing.</li>
+<li><strong>buyThreshold</strong> &#8211; Defines the confidence level at which Clair will
+will recommend a buy. Default 0.65.</li>
+<li><strong>sellThreshold</strong> &#8211; Defines the confidence level at which Clair will
+recommend a sell. Default 0.65.</li>
+<li><strong>C</strong> &#8211; A penalty parameter for false positives. See scikit-learn
+documentation for more details. Default 1.</li>
+<li><strong>gamma</strong> &#8211; The kernel coefficient for machine learning. See scikit-learn
+documentation for more details. Default 10.</li>
+<li><strong>continuedTraining</strong> &#8211; Determine if data from the testing period should
+be used to continue training the model during the
+testing phase. Default False.</li>
+<li><strong>tz</strong> &#8211; The timezone associated with the datetime parameters. Default
+UTC.</li>
+<li><strong>transaction_cost</strong> &#8211; The amount deducted from balance after each trade.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>debug</strong> &#8211; A boolean value that determines if debug strings will be
+printed as backtesting is run. Warning: may result in a lot of
+output.</li>
+<li><strong>startingBalance</strong> &#8211; The initial balance.</li>
+<li><strong>buyingPower</strong> &#8211; Cash balance.</li>
+<li><strong>shares</strong> &#8211; The number of shares of a stock.</li>
+<li><strong>lastQuote</strong> &#8211; The latest available stock price.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="clairvoyant.Portfolio.buyLogic">
+<code class="descname">buyLogic</code><span class="sig-paren">(</span><em>confidence</em>, <em>row</em>, <em>attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.buyLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.buyLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decide whether or not to buy shares.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.buyShares">
+<code class="descname">buyShares</code><span class="sig-paren">(</span><em>shares</em>, <em>quote</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.buyShares"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.buyShares" title="Permalink to this definition">¶</a></dt>
+<dd><p>Buy a certain number of shares.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>shares</strong> &#8211; The number of shares to buys.</li>
+<li><strong>quote</strong> &#8211; The price to buy shares at.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.clearAllRuns">
+<code class="descname">clearAllRuns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.clearAllRuns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.clearAllRuns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the portfolio.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.displayAllRuns">
+<code class="descname">displayAllRuns</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.displayAllRuns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.displayAllRuns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print trading statistics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.displayLastRun">
+<code class="descname">displayLastRun</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.displayLastRun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.displayLastRun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print results of the latest run.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.nextPeriodLogic">
+<code class="descname">nextPeriodLogic</code><span class="sig-paren">(</span><em>prediction</em>, <em>nextPeriodPerformance</em>, <em>row</em>, <em>attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.nextPeriodLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.nextPeriodLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record performance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.portfolioValue">
+<code class="descname">portfolioValue</code><span class="sig-paren">(</span><em>row</em>, <em>attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.portfolioValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.portfolioValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the value of the portfolio.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>row</strong> &#8211; Stock data as a named tuple.</li>
+<li><strong>attrs</strong> &#8211; A key map that maps common names to the named tuple keys.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.runModel">
+<code class="descname">runModel</code><span class="sig-paren">(</span><em>data</em>, <em>startingBalance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.runModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.runModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backtest the porfolio strategy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> &#8211; Historical stock data.</li>
+<li><strong>startingBalance</strong> &#8211; The beginning available cash balance.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.sellLogic">
+<code class="descname">sellLogic</code><span class="sig-paren">(</span><em>confidence</em>, <em>row</em>, <em>attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.sellLogic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.sellLogic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decide whether or not to sell shares.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.Portfolio.sellShares">
+<code class="descname">sellShares</code><span class="sig-paren">(</span><em>shares</em>, <em>quote</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/portfolio.html#Portfolio.sellShares"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.Portfolio.sellShares" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sell a certain number of shares.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>shares</strong> &#8211; The number of shares to sell.</li>
+<li><strong>quote</strong> &#8211; The price to sell at.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clairvoyant.History">
+<em class="property">class </em><code class="descclassname">clairvoyant.</code><code class="descname">History</code><span class="sig-paren">(</span><em>data</em>, <em>col_map=None</em>, <em>tz=&lt;UTC&gt;</em>, <em>features=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/history.html#History"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.History" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for historical stock data.</p>
+<p>You can query for a row by date:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;2017-02-14 06:30:00&#39;</span><span class="p">]</span>  <span class="c1"># get data by a specific date</span>
+</pre></div>
+</div>
+<p>You can slice using datetime objects or index numbers:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">history</span><span class="p">[</span><span class="n">startDate</span><span class="p">:</span><span class="n">endDate</span><span class="p">]</span>  <span class="c1"># get data between startDate and endDate</span>
+<span class="n">history</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">]</span>              <span class="c1"># get rows between 0 and 100</span>
+</pre></div>
+</div>
+<p>You can get individual records by index:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">history</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>  <span class="c1"># gets a row of data</span>
+</pre></div>
+</div>
+<p>You can access a column of data by key just like a dataframe:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">]</span>  <span class="c1"># gets a column of data</span>
+<span class="n">history</span><span class="o">.</span><span class="n">open</span>     <span class="c1"># or access the same data by attribute</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; Client stock data. Can be a string representing a csv file or
+it can be a pandas dataframe.</li>
+<li><strong>col_map</strong> &#8211; A dict mapping your data&#8217;s column names to common names
+where the common names are keys and your custom names are
+values. This is an optional parameter. If <code class="docutils literal"><span class="pre">None</span></code> is
+provided, History will assume client data is already
+formatted with common names.</li>
+<li><strong>tz</strong> &#8211; The timezone to associate with the datetime in data. Default is
+UTC time.</li>
+<li><strong>features</strong> &#8211; A list of column names that informs Clair which columns
+can be used as learning features.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>date</strong> &#8211; Datetime series in data corresponding to the beginning of each
+period.</li>
+<li><strong>open</strong> &#8211; Opening stock price series.</li>
+<li><strong>high</strong> &#8211; Series of stock price highs.</li>
+<li><strong>low</strong> &#8211; Series of stock price lows.</li>
+<li><strong>close</strong> &#8211; Closing stock price series.</li>
+<li><strong>volume</strong> &#8211; Series of stock price trading volume.</li>
+<li><strong>return_rate</strong> &#8211; Series of percentage change calculated as a percent of
+opening price.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="clairvoyant.History.read_csv">
+<code class="descname">read_csv</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/history.html#History.read_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.History.read_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a csv file.</p>
+<p>Exact same interface as <code class="docutils literal"><span class="pre">pandas.read_csv</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clairvoyant.History.rename">
+<code class="descname">rename</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clairvoyant/history.html#History.rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clairvoyant.History.rename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rename the stored dataframe columns.</p>
+<p>Exposes the exact same interface as <code class="docutils literal"><span class="pre">pandas.DataFrame.rename</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to Clairvoyant’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Anthony Federico, Thomas Chen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

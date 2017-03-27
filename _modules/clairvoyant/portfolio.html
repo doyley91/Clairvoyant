@@ -1,0 +1,440 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clairvoyant.portfolio &mdash; Clairvoyant 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Clairvoyant 0.2.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Clairvoyant
+          
+
+          
+            
+            <img src="../../_static/logo.svg" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Clairvoyant API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Clairvoyant</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>clairvoyant.portfolio</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clairvoyant.portfolio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Portfolio provides a basic portfolio class.</span>
+
+<span class="sd">A portfolio defines a balance that is used in stock trading logic. In addition</span>
+<span class="sd">to an implementation of trading strategy, it performs accounting functions to</span>
+<span class="sd">keep track of the number of shares and running balance.</span>
+
+<span class="sd">Clients may wish to subclass ``Portfolio`` to create variations based on the</span>
+<span class="sd">aggressiveness of the trading logic or perhaps introduce additional trading</span>
+<span class="sd">conditions. For example, different broker services may have different</span>
+<span class="sd">transaction costs and pricing structures.</span>
+
+<span class="sd">.. Todo:: This module is currently unfinished. Currently, portfolio can trade</span>
+<span class="sd">   only one stock. It will be updated to allow multiple stock symbols.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="k">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">clairvoyant</span> <span class="k">import</span> <span class="n">Clair</span>
+
+
+<div class="viewcode-block" id="Portfolio"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio">[docs]</a><span class="k">class</span> <span class="nc">Portfolio</span><span class="p">(</span><span class="n">Clair</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Provides a basic portfolio framework for backtesting.</span>
+
+<span class="sd">    :param variables: A list of columns that represent learning features.</span>
+<span class="sd">    :param trainStart: A datetime as a string that should be consistent with</span>
+<span class="sd">                       the ``tz`` parameter. Defines the start date for model</span>
+<span class="sd">                       training.</span>
+<span class="sd">    :param trainEnd: A datetime as a string that should be consistent with the</span>
+<span class="sd">                     ``tz`` parameter. Defines the end date for model training.</span>
+<span class="sd">    :param testStart: A datetime as a string that should be consistent with the</span>
+<span class="sd">                      ``tz`` parameter. Defines the start date for model</span>
+<span class="sd">                      testing.</span>
+<span class="sd">    :param testEnd: A datetime as a string that should be consistent with the</span>
+<span class="sd">                    ``tz`` parameter. Defines the end date for model testing.</span>
+<span class="sd">    :param buyThreshold: Defines the confidence level at which Clair will</span>
+<span class="sd">                         will recommend a buy. Default 0.65.</span>
+<span class="sd">    :param sellThreshold: Defines the confidence level at which Clair will</span>
+<span class="sd">                          recommend a sell. Default 0.65.</span>
+<span class="sd">    :param C: A penalty parameter for false positives. See scikit-learn</span>
+<span class="sd">              documentation for more details. Default 1.</span>
+<span class="sd">    :param gamma: The kernel coefficient for machine learning. See scikit-learn</span>
+<span class="sd">                  documentation for more details. Default 10.</span>
+<span class="sd">    :param continuedTraining: Determine if data from the testing period should</span>
+<span class="sd">                              be used to continue training the model during the</span>
+<span class="sd">                              testing phase. Default False.</span>
+<span class="sd">    :param tz: The timezone associated with the datetime parameters. Default</span>
+<span class="sd">               UTC.</span>
+<span class="sd">    :param transaction_cost: The amount deducted from balance after each trade.</span>
+
+<span class="sd">    :ivar debug: A boolean value that determines if debug strings will be</span>
+<span class="sd">                 printed as backtesting is run. Warning: may result in a lot of</span>
+<span class="sd">                 output.</span>
+<span class="sd">    :ivar startingBalance: The initial balance.</span>
+<span class="sd">    :ivar buyingPower: Cash balance.</span>
+<span class="sd">    :ivar shares: The number of shares of a stock.</span>
+<span class="sd">    :ivar lastQuote: The latest available stock price.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">trainStart</span><span class="p">,</span> <span class="n">trainEnd</span><span class="p">,</span> <span class="n">testStart</span><span class="p">,</span> <span class="n">testEnd</span><span class="p">,</span>
+            <span class="n">buyThreshold</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span> <span class="n">sellThreshold</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">continuedTraining</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="n">timezone</span><span class="p">(</span><span class="s1">&#39;UTC&#39;</span><span class="p">),</span> <span class="n">transaction_cost</span><span class="o">=</span><span class="mf">9.99</span>
+            <span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">variables</span><span class="p">,</span> <span class="n">trainStart</span><span class="p">,</span> <span class="n">trainEnd</span><span class="p">,</span> <span class="n">testStart</span><span class="p">,</span> <span class="n">testEnd</span><span class="p">,</span>
+            <span class="n">buyThreshold</span><span class="o">=</span><span class="n">buyThreshold</span><span class="p">,</span> <span class="n">sellThreshold</span><span class="o">=</span><span class="n">sellThreshold</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span>
+            <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">continuedTraining</span><span class="o">=</span><span class="n">continuedTraining</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="n">tz</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Conditions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transaction_cost</span> <span class="o">=</span> <span class="n">transaction_cost</span>
+
+        <span class="c1"># Run</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startingBalance</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shares</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lastQuote</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># All runs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performances</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Portfolio.runModel"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.runModel">[docs]</a>    <span class="k">def</span> <span class="nf">runModel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">startingBalance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Backtest the porfolio strategy.</span>
+
+<span class="sd">        :param data: Historical stock data.</span>
+<span class="sd">        :param startingBalance: The beginning available cash balance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runs</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Portfolio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startingBalance</span> <span class="o">=</span> <span class="n">startingBalance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span> <span class="o">=</span> <span class="n">startingBalance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shares</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lastQuote</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">purchases</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sales</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Learn and execute</span>
+        <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learn</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.portfolioValue"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.portfolioValue">[docs]</a>    <span class="k">def</span> <span class="nf">portfolioValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine the value of the portfolio.</span>
+
+<span class="sd">        :param row: Stock data as a named tuple.</span>
+<span class="sd">        :param attrs: A key map that maps common names to the named tuple keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">quote</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="o">*</span><span class="n">quote</span></div>
+
+<div class="viewcode-block" id="Portfolio.buyShares"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.buyShares">[docs]</a>    <span class="k">def</span> <span class="nf">buyShares</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shares</span><span class="p">,</span> <span class="n">quote</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Buy a certain number of shares.</span>
+
+<span class="sd">        :param shares: The number of shares to buys.</span>
+<span class="sd">        :param quote: The price to buy shares at.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">shares</span><span class="o">*</span><span class="n">quote</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">transaction_cost</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span> <span class="o">-=</span> <span class="n">shares</span><span class="o">*</span><span class="n">quote</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">transaction_cost</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shares</span> <span class="o">+=</span> <span class="n">shares</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">purchases</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry, insufficient buying power.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.sellShares"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.sellShares">[docs]</a>    <span class="k">def</span> <span class="nf">sellShares</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shares</span><span class="p">,</span> <span class="n">quote</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sell a certain number of shares.</span>
+
+<span class="sd">        :param shares: The number of shares to sell.</span>
+<span class="sd">        :param quote: The price to sell at.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">shares</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span> <span class="o">+=</span> <span class="n">shares</span><span class="o">*</span><span class="n">quote</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">transaction_cost</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shares</span> <span class="o">-=</span> <span class="n">shares</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sales</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry, you don&#39;t own this many shares.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.buyLogic"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.buyLogic">[docs]</a>    <span class="k">def</span> <span class="nf">buyLogic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decide whether or not to buy shares.&quot;&quot;&quot;</span>
+        <span class="n">quote</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">])</span>
+        <span class="n">shareOrder</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">confidence</span> <span class="o">&gt;=</span> <span class="mf">0.9</span><span class="p">:</span>
+            <span class="n">shareOrder</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="o">*</span><span class="mf">0.7</span><span class="p">)</span><span class="o">/</span><span class="n">quote</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buyShares</span><span class="p">(</span><span class="n">shareOrder</span><span class="p">,</span> <span class="n">quote</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">confidence</span> <span class="o">&gt;=</span> <span class="mf">0.8</span><span class="p">:</span>
+            <span class="n">shareOrder</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span><span class="o">/</span><span class="n">quote</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buyShares</span><span class="p">(</span><span class="n">shareOrder</span><span class="p">,</span> <span class="n">quote</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">confidence</span> <span class="o">&gt;=</span> <span class="mf">0.75</span><span class="p">:</span>
+            <span class="n">shareOrder</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="o">*</span><span class="mf">0.3</span><span class="p">)</span><span class="o">/</span><span class="n">quote</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buyShares</span><span class="p">(</span><span class="n">shareOrder</span><span class="p">,</span> <span class="n">quote</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="ow">and</span> <span class="n">shareOrder</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">buyLogic</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Bought </span><span class="si">{shareOrder}</span><span class="s1"> @ $</span><span class="si">{quote}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.sellLogic"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.sellLogic">[docs]</a>    <span class="k">def</span> <span class="nf">sellLogic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">confidence</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Decide whether or not to sell shares.&quot;&quot;&quot;</span>
+        <span class="n">quote</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">confidence</span> <span class="o">&gt;=</span> <span class="mf">0.75</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">shares</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+                <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">sellLogic</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Sold </span><span class="si">{self.shares}</span><span class="s1"> @ $</span><span class="si">{quote}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sellShares</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="p">,</span> <span class="n">quote</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.nextPeriodLogic"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.nextPeriodLogic">[docs]</a>    <span class="k">def</span> <span class="nf">nextPeriodLogic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">nextPeriodPerformance</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Record performance.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">nextPeriodLogic</span><span class="p">(</span>
+                <span class="n">prediction</span><span class="p">,</span> <span class="n">nextPeriodPerformance</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">attrs</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">prediction</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">nextPeriodPerformance</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># An accurate prediction was made</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="n">prediction</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">nextPeriodPerformance</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># An accurate prediction was made</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Record Performance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lastQuote</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">])</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">portfolioValue</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">((</span><span class="n">val</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">startingBalance</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">startingBalance</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.displayLastRun"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.displayLastRun">[docs]</a>    <span class="k">def</span> <span class="nf">displayLastRun</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print results of the latest run.&quot;&quot;&quot;</span>
+        <span class="n">bld</span><span class="p">,</span> <span class="n">gre</span><span class="p">,</span> <span class="n">red</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1m&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runs</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: No last run&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">bld</span><span class="o">+</span><span class="s2">&quot;Run #&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runs</span><span class="p">)</span><span class="o">+</span><span class="n">end</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Buying Power: $&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shares: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Buy Transactions: </span><span class="si">{self.purchases}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Sell Transactions: </span><span class="si">{self.sales}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">totalValue</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lastQuote</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">totalValue</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">startingBalance</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lastQuote</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Total Value: $</span><span class="si">{gre}{val}{end}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">totalValue</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">startingBalance</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lastQuote</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Total Value: $</span><span class="si">{red}{val}{end}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">shares</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lastQuote</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Total Value: $</span><span class="si">{val}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.displayAllRuns"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.displayAllRuns">[docs]</a>    <span class="k">def</span> <span class="nf">displayAllRuns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print trading statistics.&quot;&quot;&quot;</span>
+        <span class="n">bld</span><span class="p">,</span> <span class="n">gre</span><span class="p">,</span> <span class="n">red</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1m&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{bld}</span><span class="s1">Performance across all runs</span><span class="si">{end}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Runs: </span><span class="si">{self.runs}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">averagePerformance</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+                <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performances</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">performances</span><span class="p">),</span> <span class="mi">2</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average Performance: None</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">averagePerformance</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Average Performance: </span><span class="si">{gre}{averagePerformance}</span><span class="s1">%</span><span class="si">{end}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">averagePerformance</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Average Performance: </span><span class="si">{red}{averagePerformance}</span><span class="s1">%</span><span class="si">{end}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Average Performance: </span><span class="si">{averagePerformance}</span><span class="s1">%&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.clearAllRuns"><a class="viewcode-back" href="../../api.html#clairvoyant.Portfolio.clearAllRuns">[docs]</a>    <span class="k">def</span> <span class="nf">clearAllRuns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reset the portfolio.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startingBalance</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buyingPower</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shares</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lastQuote</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performances</span> <span class="o">=</span> <span class="p">[]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Anthony Federico, Thomas Chen.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
